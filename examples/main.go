@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/parikshitg/gomongo"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 var client *gomongo.MongoDB
@@ -46,4 +47,17 @@ func main() {
 	}
 	log.Printf("Found a document: %+v\n", res)
 
+	// update
+	filter := bson.D{{"_id", id}}
+	update := bson.D{
+		{"$set", bson.D{
+			{"title", "JOHN-CENA-TITLE"},
+		}},
+	}
+
+	updateResult, err := collection.Update(filter, update)
+	if err != nil {
+		log.Fatal("Update eerrorrrr: ------- : ", err)
+	}
+	log.Printf("Matched %v documents and updated %v documents.\n", updateResult.MatchedCount, updateResult.ModifiedCount)
 }
