@@ -36,4 +36,14 @@ func main() {
 		log.Fatal("Insert document error : ", err)
 	}
 	log.Println("insertresult id : ", insertResult.InsertedID)
+
+	// Read from collection
+	id := insertResult.InsertedID
+	var result Blog
+	res, err := collection.Read(id, result)
+	if err != nil {
+		log.Fatal("Read Error : ", err)
+	}
+	log.Printf("Found a document: %+v\n", res)
+
 }
