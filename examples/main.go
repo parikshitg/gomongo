@@ -17,26 +17,27 @@ type Blog struct {
 
 func main() {
 
+	// Create Mongo Client
 	uri := "mongodb://localhost:27017"
-
 	var err error
 	client, err = gomongo.Connect(uri)
 	if err != nil {
 		log.Fatal("Connection Error : ", err)
 	}
-	log.Println("client : ", client)
+
+	// Close Connection
+	defer client.Close()
 
 	// Create Collection
-	collection = client.CreateCollection("Cricket", "India")
-	log.Println("collection : ", collection)
+	collection = client.CreateCollection("BlogDB", "Blogs")
 
 	// Insert into Collection
-	blog1 := Blog{Title: "Title One", Body: "BODY of First Blog ONe"}
+	blog1 := Blog{Title: "First Blog Title", Body: "BODY of First Blog."}
 	insertResult, err := collection.Insert(&blog1)
 	if err != nil {
-		log.Fatal("Insert document error : ", err)
+		log.Fatal("Insert Error : ", err)
 	}
-	log.Println("insertresult id : ", insertResult.InsertedID)
+	log.Println("InsertResult id : ", insertResult.InsertedID)
 
 	// Read from collection
 	id := insertResult.InsertedID
@@ -51,13 +52,13 @@ func main() {
 	filter := bson.D{{"_id", id}}
 	update := bson.D{
 		{"$set", bson.D{
-			{"title", "JOHN-CENA-TITLE"},
+			{"title", "UPDATED-TITLE"},
 		}},
 	}
 
 	updateResult, err := collection.Update(filter, update)
 	if err != nil {
-		log.Fatal("Update eerrorrrr: ------- : ", err)
+		log.Fatal("Update Error : ", err)
 	}
 	log.Printf("Matched %v documents and updated %v documents.\n", updateResult.MatchedCount, updateResult.ModifiedCount)
 
@@ -66,6 +67,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Delete Error : ", err)
 	}
-	log.Printf("Deleted %v documents in the trainers collection\n", deleteResult.DeletedCount)
+	log.Printf("Deleted %v documents in the Blogs collection\n", deleteResult.DeletedCount)
 
 }
