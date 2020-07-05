@@ -60,4 +60,12 @@ func main() {
 		log.Fatal("Update eerrorrrr: ------- : ", err)
 	}
 	log.Printf("Matched %v documents and updated %v documents.\n", updateResult.MatchedCount, updateResult.ModifiedCount)
+
+	// delete
+	deleteResult, err := collection.Delete(filter)
+	if err != nil {
+		log.Fatal("Delete Error : ", err)
+	}
+	log.Printf("Deleted %v documents in the trainers collection\n", deleteResult.DeletedCount)
+
 }
