@@ -8,26 +8,31 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var client *mongo.Client
+type MongoDB struct {
+	Client *mongo.Client
+}
 
-func Connect(uri string) (*mongo.Client, error) {
+func Connect(uri string) (*MongoDB, error) {
+
+	var g = &MongoDB{}
+
 	// Set client options
 	clientOptions := options.Client().ApplyURI(uri)
 
 	// Connect to MongoDB
 	var err error
-	client, err = mongo.Connect(context.TODO(), clientOptions)
+	g.Client, err = mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
 		return nil, err
 	}
 
 	// Check the connection
-	err = client.Ping(context.TODO(), nil)
+	err = g.Client.Ping(context.TODO(), nil)
 	if err != nil {
 		return nil, err
 	}
 
 	log.Println("Connected to MongoDB!")
 
-	return client, nil
+	return g, nil
 }
